@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cuento Interactivo por Páginas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #cuento-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    #texto {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .sena-btn {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 5px 12px;
+      margin: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button.nav {
+      margin: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #ffb703;
+      cursor: pointer;
+    }
+
+    #modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    #modal img {
+      max-width: 300px;
+    }
+
+    #cerrar {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📖 Cuento Interactivo: "Mi Primer Amigo"</h1>
+  <h2>Da click en las palabras del cuadro azul para conocerlas en lenguaje de señas mexicana</h2>
+
+  <div id="cuento-container">
+    <p id="texto"></p>
+    <div id="señas-container"></div>
+    <button class="nav" id="anterior">⬅️ Anterior</button>
+    <button class="nav" id="siguiente">Siguiente ➡️</button>
+  </div>
+
+  <div id="modal">
+    <div id="modal-content">
+      <span id="cerrar" onclick="cerrarModal()">×</span>
+      <img id="sena-img" src="" alt="Imagen de seña">
+    </div>
+  </div>
+
+  <script>
+    const escenas = [
+      {
+        texto: 'Era mi primer día en la nueva escuela. Al entrar al salón, alguien me dijo ',
+        palabras: [{ palabra: 'hola', imagen: 'hola.jpg' }]
+      },
+      {
+        texto: 'Me acerqué y descubrí que era un nuevo ',
+        palabras: [{ palabra: 'amigo', imagen: 'amigo.jpg' }]
+      },
+      {
+        texto: 'Él me enseñó cómo decir ',
+        palabras: [{ palabra: 'gracias', imagen: 'gracias.jpg' }]
+      },
+      {
+        texto: 'Y también cómo decir ',
+        palabras: [{ palabra: 'por favor', imagen: 'porfavor.jpg' }]
+      },
+      {
+        texto: 'Desde entonces, somos grandes amigos. ¡Y ahora sé un poco de lengua de señas!',
+        palabras: []
+      }
+    ];
+
+    let indice = 0;
+
+    function mostrarEscena() {
+      const textoEl = document.getElementById('texto');
+      const señasEl = document.getElementById('señas-container');
+      const escena = escenas[indice];
+
+      textoEl.innerHTML = escena.texto;
+      señasEl.innerHTML = '';
+
+      escena.palabras.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'sena-btn';
+        btn.textContent = p.palabra;
+        btn.onclick = () => mostrarSena(p.imagen);
+        señasEl.appendChild(btn);
+      });
+
+      document.getElementById('anterior').disabled = indice === 0;
+      document.getElementById('siguiente').disabled = indice === escenas.length - 1;
+    }
+
+    function mostrarSena(imagen) {
+      document.getElementById('sena-img').src = 'img/' + imagen;
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    document.getElementById('anterior').onclick = () => {
+      if (indice > 0) {
+        indice--;
+        mostrarEscena();
+      }
+    };
+
+    document.getElementById('siguiente').onclick = () => {
+      if (indice < escenas.length - 1) {
+        indice++;
+        mostrarEscena();
+      }
+    };
+
+    window.onload = mostrarEscena;
+  </script>
+
+</body>
+</html>
